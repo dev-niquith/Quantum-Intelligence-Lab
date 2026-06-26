@@ -1,0 +1,13 @@
+random_seed: 42
+
+dataset:
+  name: breast_cancer
+
+cross_validation:
+  folds: 5
+
+model:
+  type: random_forest
+
+reporting:
+  save_reports: true
