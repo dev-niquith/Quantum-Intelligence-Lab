@@ -30,15 +30,41 @@ def main():
         seed=42
     )
 
-    print(
-        "\nBenchmark Results\n"
+    results = sorted(
+
+        results,
+
+        key=lambda x:
+        x["accuracy"],
+
+        reverse=True
     )
 
-    for key, value in results.items():
+    print(
+        "\nCLASSICAL MODEL RANKINGS\n"
+    )
+
+    for rank, result in enumerate(
+        results,
+        start=1
+    ):
 
         print(
-            f"{key}: {value}"
+            f"{rank}. "
+            f"{result['model']}"
         )
+
+        print(
+            f"Accuracy: "
+            f"{result['accuracy']}"
+        )
+
+        print(
+            f"F1: "
+            f"{result['f1']}"
+        )
+
+        print("-" * 30)
 
 
 if __name__ == "__main__":

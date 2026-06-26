@@ -1,24 +1,19 @@
 """
 classical_benchmark.py
 
-Runs classical models
-through QIL evaluation engine.
+Runs all classical models.
 """
 
-from models.classical.random_forest_model import (
-    RandomForestModel
+from evaluation.metrics_calculator import (
+    MetricsCalculator
 )
 
 from evaluation.train_test_manager import (
     TrainTestManager
 )
 
-from evaluation.metrics_calculator import (
-    MetricsCalculator
-)
-
-from evaluation.cross_validator import (
-    CrossValidator
+from models.classical.model_registry import (
+    ModelRegistry
 )
 
 
@@ -30,11 +25,6 @@ class ClassicalBenchmark:
         y,
         seed
     ):
-
-        model = (
-            RandomForestModel()
-            .build()
-        )
 
         splitter = (
             TrainTestManager()
@@ -51,35 +41,42 @@ class ClassicalBenchmark:
             seed
         )
 
-        model.fit(
-            X_train,
-            y_train
+        registry = (
+            ModelRegistry()
         )
 
-        predictions = (
-            model.predict(X_test)
-        )
+        results = []
 
-        metrics = (
-            MetricsCalculator()
-            .calculate(
-                y_test,
-                predictions
+        for (
+            model_name,
+            model
+        ) in registry.get_models().items():
+
+            model.fit(
+                X_train,
+                y_train
             )
-        )
 
-        cv_results = (
-            CrossValidator()
-            .evaluate(
-                model,
-                X,
-                y,
-                folds=5
+            predictions = (
+                model.predict(
+                    X_test
+                )
             )
-        )
 
-        metrics.update(
-            cv_results
-        )
+            metrics = (
+                MetricsCalculator()
+                .calculate(
+                    y_test,
+                    predictions
+                )
+            )
 
-        return metrics
+            results.append({
+
+                "model":
+                    model_name,
+
+                **metrics
+            })
+
+        return results
