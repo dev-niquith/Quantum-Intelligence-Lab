@@ -5,22 +5,25 @@ Central registry for all
 classical models.
 """
 
-from models.classical.random_forest_model import (
+from src.models.classical.random_forest_model import (
     RandomForestModel
 )
 
-from models.classical.logistic_regression_model import (
+from src.models.classical.logistic_regression_model import (
     LogisticRegressionModel
 )
 
-from models.classical.svm_model import (
+from src.models.classical.svm_model import (
     SVMModel
 )
 
-from models.classical.mlp_model import (
+from src.models.classical.mlp_model import (
     MLPModel
 )
 
+from src.models.classical.xgboost_model import (
+    XGBoostModel
+)
 
 class ModelRegistry:
 
@@ -38,5 +41,8 @@ class ModelRegistry:
                 SVMModel().build(),
 
             "MLP":
-                MLPModel().build()
+                MLPModel().build(),
+
+            "XGBoost":
+                XGBoostModel().build()
         }

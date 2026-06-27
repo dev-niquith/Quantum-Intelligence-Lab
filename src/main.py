@@ -1,8 +1,8 @@
-from datasets.dataset_loader import (
+from src.datasets.dataset_loader import (
     DatasetLoader
 )
 
-from benchmarking.classical_benchmark import (
+from src.benchmarking.classical_benchmark import (
     ClassicalBenchmark
 )
 

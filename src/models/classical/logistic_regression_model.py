@@ -15,7 +15,7 @@ class LogisticRegressionModel:
 
         return LogisticRegression(
 
-            max_iter=500,
+            max_iter=2000,
 
             random_state=42
         )
