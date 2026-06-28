@@ -1,9 +1,19 @@
+"""
+main.py
+
+QIL Main Application
+"""
+
 from src.datasets.dataset_loader import (
     DatasetLoader
 )
 
 from src.benchmarking.classical_benchmark import (
     ClassicalBenchmark
+)
+
+from src.reporting.comparison_matrix import (
+    ComparisonMatrix
 )
 
 
@@ -14,11 +24,19 @@ def main():
     print("QUANTUM INTELLIGENCE LAB")
     print("=" * 60)
 
+    # --------------------------------
+    # Load Dataset
+    # --------------------------------
+
     loader = DatasetLoader()
 
     X, y = loader.load_dataset(
         "breast_cancer"
     )
+
+    # --------------------------------
+    # Run Benchmark
+    # --------------------------------
 
     benchmark = (
         ClassicalBenchmark()
@@ -30,41 +48,32 @@ def main():
         seed=42
     )
 
-    results = sorted(
+    # --------------------------------
+    # Comparison Matrix
+    # --------------------------------
 
-        results,
+    matrix = (
+        ComparisonMatrix()
+    )
 
-        key=lambda x:
-        x["accuracy"],
+    df = matrix.generate(
+        results
+    )
 
-        reverse=True
+    matrix.display(df)
+
+    matrix.save_csv(
+        df,
+        "reports/benchmark_results.csv"
     )
 
     print(
-        "\nCLASSICAL MODEL RANKINGS\n"
+        "\nReport Saved:"
     )
 
-    for rank, result in enumerate(
-        results,
-        start=1
-    ):
-
-        print(
-            f"{rank}. "
-            f"{result['model']}"
-        )
-
-        print(
-            f"Accuracy: "
-            f"{result['accuracy']}"
-        )
-
-        print(
-            f"F1: "
-            f"{result['f1']}"
-        )
-
-        print("-" * 30)
+    print(
+        "reports/benchmark_results.csv"
+    )
 
 
 if __name__ == "__main__":

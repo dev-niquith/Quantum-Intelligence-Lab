@@ -1,0 +1,6 @@
+rank,model,accuracy,precision,recall,f1
+1,Logistic Regression,0.9649,0.9649,0.9649,0.9649
+2,MLP,0.9649,0.9652,0.9649,0.9647
+3,XGBoost,0.9561,0.9561,0.9561,0.956
+4,SVM,0.9474,0.9474,0.9474,0.9474
+5,Random Forest,0.9386,0.939,0.9386,0.9387
