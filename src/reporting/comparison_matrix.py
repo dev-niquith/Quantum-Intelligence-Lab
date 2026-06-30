@@ -19,9 +19,13 @@ class ComparisonMatrix:
 
         df = pd.DataFrame(results)
 
-        df = df.sort_values(
-            by="accuracy",
-            ascending=False
+        df = (
+            df
+            .sort_values(
+                by="accuracy",
+                ascending=False
+            )
+            .reset_index(drop=True)
         )
 
         df.insert(
