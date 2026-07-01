@@ -1,123 +1,190 @@
 """
 classical_benchmark.py
 
-Runs all classical models through:
+Quantum Intelligence Lab (QIL)
 
-Dataset
-    ↓
-Train/Test Split
-    ↓
-Preprocessing
-    ↓
-Model
-    ↓
-Evaluation
+Research-grade Classical Benchmark Engine.
+
+This module benchmarks multiple classical machine learning models
+using the Cross Validation Engine.
+
+Unlike simple benchmark scripts, this implementation:
+
+✓ Uses research-grade cross validation
+✓ Computes statistical summaries
+✓ Produces reproducible evaluations
+✓ Is model-agnostic
+✓ Can later benchmark Quantum and Hybrid models
+without architectural changes.
 """
 
-from src.evaluation.metrics_calculator import (
-    MetricsCalculator
-)
+from typing import List
 
-from src.evaluation.train_test_manager import (
-    TrainTestManager
-)
+import pandas as pd
 
-from src.models.classical.model_registry import (
-    ModelRegistry
-)
-
-from src.preprocessing.preprocessing_pipeline import (
-    PreprocessingPipeline
-)
+from src.evaluation.cross_validator import CrossValidator
 
 
 class ClassicalBenchmark:
+    """
+    Research Benchmark Engine.
 
-    def run(
+    This class evaluates every model supplied by the
+    Model Registry and returns a ranked leaderboard.
+    """
+
+    def __init__(
         self,
-        X,
-        y,
-        seed
+        folds: int = 5,
+        random_seed: int = 42
     ):
 
-        splitter = TrainTestManager()
-
-        (
-            X_train,
-            X_test,
-            y_train,
-            y_test
-        ) = splitter.split(
-            X,
-            y,
-            seed
+        self.cross_validator = CrossValidator(
+            folds=folds,
+            random_seed=random_seed
         )
 
-        registry = ModelRegistry()
+    def evaluate_models(
+        self,
+        models: List,
+        X,
+        y
+    ) -> pd.DataFrame:
+        """
+        Evaluate every supplied model.
 
-        results = []
+        Parameters
+        ----------
+        models
 
-        for (
-            model_name,
-            model
-        ) in registry.get_models().items():
+            List of tuples
 
-            # --------------------------
-            # PREPROCESSING
-            # --------------------------
+            Example
 
-            pipeline = (
-                PreprocessingPipeline(
-                    k_features=15,
-                    pca_components=8
-                )
+            [
+                ("Random Forest", rf_model),
+                ("SVM", svm_model)
+            ]
+
+        Returns
+        -------
+        pandas DataFrame
+
+            Ranked leaderboard.
+        """
+
+        leaderboard = []
+
+        for model_name, model in models:
+
+            print(f"\nEvaluating {model_name}...")
+
+            statistics = self.cross_validator.evaluate(
+                model,
+                X,
+                y
             )
 
-            X_train_processed = (
-                pipeline.fit_transform(
-                    X_train,
-                    y_train
-                )
+            leaderboard.append(
+
+                {
+
+                    "model": model_name,
+
+                    "accuracy": statistics["accuracy"]["mean"],
+
+                    "precision": statistics["precision"]["mean"],
+
+                    "recall": statistics["recall"]["mean"],
+
+                    "f1": statistics["f1"]["mean"],
+
+                    "accuracy_std":
+                        statistics["accuracy"]["standard_deviation"],
+
+                    "precision_std":
+                        statistics["precision"]["standard_deviation"],
+
+                    "recall_std":
+                        statistics["recall"]["standard_deviation"],
+
+                    "f1_std":
+                        statistics["f1"]["standard_deviation"],
+
+                    "accuracy_ci_lower":
+                        statistics["accuracy"]["confidence_interval_lower"],
+
+                    "accuracy_ci_upper":
+                        statistics["accuracy"]["confidence_interval_upper"],
+
+                    "full_statistics": statistics
+
+                }
+
             )
 
-            X_test_processed = (
-                pipeline.transform(
-                    X_test
-                )
+        leaderboard = pd.DataFrame(
+            leaderboard
+        )
+
+        leaderboard = leaderboard.sort_values(
+            by="accuracy",
+            ascending=False
+        )
+
+        leaderboard.reset_index(
+            drop=True,
+            inplace=True
+        )
+
+        leaderboard.insert(
+            0,
+            "rank",
+            range(
+                1,
+                len(leaderboard) + 1
+            )
+        )
+
+        return leaderboard
+
+    def print_results(
+        self,
+        leaderboard: pd.DataFrame
+    ):
+        """
+        Print benchmark results.
+        """
+
+        print()
+
+        print("=" * 60)
+        print("CLASSICAL RESEARCH BENCHMARK")
+        print("=" * 60)
+
+        for _, row in leaderboard.iterrows():
+
+            print()
+
+            print(f"Rank : {row['rank']}")
+            print(f"Model : {row['model']}")
+
+            print(
+                f"Mean Accuracy : {row['accuracy']:.4f}"
             )
 
-            # --------------------------
-            # TRAIN
-            # --------------------------
-
-            model.fit(
-                X_train_processed,
-                y_train
+            print(
+                f"Std Dev       : {row['accuracy_std']:.4f}"
             )
 
-            predictions = (
-                model.predict(
-                    X_test_processed
-                )
+            print(
+
+                "95% CI        : "
+
+                f"[{row['accuracy_ci_lower']:.4f}, "
+
+                f"{row['accuracy_ci_upper']:.4f}]"
+
             )
 
-            # --------------------------
-            # EVALUATE
-            # --------------------------
-
-            metrics = (
-                MetricsCalculator()
-                .calculate(
-                    y_test,
-                    predictions
-                )
-            )
-
-            results.append({
-
-                "model": model_name,
-
-                **metrics
-            })
-
-        return results
+            print("-" * 40)

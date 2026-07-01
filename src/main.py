@@ -1,32 +1,30 @@
 """
 main.py
 
-QIL Main Application
+Quantum Intelligence Lab (QIL)
+
+Main application entry point.
 """
 
-from src.datasets.dataset_loader import (
-    DatasetLoader
-)
+from src.datasets.dataset_loader import DatasetLoader
 
-from src.benchmarking.classical_benchmark import (
-    ClassicalBenchmark
-)
+from src.models.classical.model_registry import ModelRegistry
 
-from src.reporting.comparison_matrix import (
-    ComparisonMatrix
-)
+from src.benchmarking.classical_benchmark import ClassicalBenchmark
+
+from src.reporting.comparison_matrix import ComparisonMatrix
 
 
 def main():
 
-    print("\n")
+    print()
     print("=" * 60)
     print("QUANTUM INTELLIGENCE LAB")
     print("=" * 60)
 
-    # --------------------------------
+    # -------------------------------------------------
     # Load Dataset
-    # --------------------------------
+    # -------------------------------------------------
 
     loader = DatasetLoader()
 
@@ -34,45 +32,41 @@ def main():
         "breast_cancer"
     )
 
-    # --------------------------------
+    # -------------------------------------------------
+    # Load Models
+    # -------------------------------------------------
+
+    registry = ModelRegistry()
+
+    models = registry.get_models()
+
+    # -------------------------------------------------
     # Run Benchmark
-    # --------------------------------
+    # -------------------------------------------------
 
-    benchmark = (
-        ClassicalBenchmark()
+    benchmark = ClassicalBenchmark(
+        folds=5,
+        random_seed=42
     )
 
-    results = benchmark.run(
-        X,
-        y,
-        seed=42
+    leaderboard = benchmark.evaluate_models(
+        models=models,
+        X=X,
+        y=y
     )
 
-    # --------------------------------
-    # Comparison Matrix
-    # --------------------------------
-
-    matrix = (
-        ComparisonMatrix()
+    benchmark.print_results(
+        leaderboard
     )
 
-    df = matrix.generate(
-        results
-    )
+    # -------------------------------------------------
+    # Generate Comparison Matrix
+    # -------------------------------------------------
 
-    matrix.display(df)
+    comparison = ComparisonMatrix()
 
-    matrix.save_csv(
-        df,
-        "reports/benchmark_results.csv"
-    )
-
-    print(
-        "\nReport Saved:"
-    )
-
-    print(
-        "reports/benchmark_results.csv"
+    comparison.generate(
+        leaderboard
     )
 
 

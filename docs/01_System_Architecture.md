@@ -31,26 +31,26 @@ Each module has a clearly defined responsibility and communicates with other mod
                                      |
                                      v
                     +----------------------------------+
-                    |     Dataset Intelligence Engine   |
+                    |     Dataset Intelligence Engine  |
                     +----------------+-----------------+
                                      |
                                      |
                                      v
                    +-----------------------------------+
-                   |     Experiment Tracking Layer      |
+                   |     Experiment Tracking Layer     |
                    +----------------+------------------+
                                      |
                                      |
                                      v
                  +----------------------------------------+
-                 |     Research Preprocessing Pipeline     |
+                 |     Research Preprocessing Pipeline    |
                  +----------------+-----------------------+
                                      |
                                      |
                                      v
                      +-------------------------------+
                      |       Model Registry          |
-                     +---------------+--------------+
+                     +---------------+---------------+
                                      |
         +----------------------------+---------------------------+
         |                            |                           |
@@ -84,7 +84,17 @@ Each module has a clearly defined responsibility and communicates with other mod
                                       |
                                       v
                      +----------------------------------+
-                     |    Comparison Matrix            |
+                     |      Domain Layer (Core)         |
+                     |----------------------------------|
+                     | ExperimentResult                 |
+                     | BenchmarkResult                  |
+                     | BaseModel                        |
+                     | Metrics                          |
+                     +----------------+-----------------+
+                                      |
+                                      v
+                     +----------------------------------+
+                     |    Comparison Matrix             |
                      +----------------+-----------------+
                                       |
                                       v
@@ -103,6 +113,36 @@ Each module has a clearly defined responsibility and communicates with other mod
 # Core Design Principles
 
 Every architectural decision in QIL follows five engineering principles.
+
+
+
+# Domain-Driven Architecture
+
+As QIL evolves, data exchanged between modules should no longer
+be represented as loose dictionaries or ad-hoc DataFrames.
+
+Instead, the platform introduces a Core Domain Layer containing
+shared domain objects.
+
+Examples include:
+
+• ExperimentResult
+• BenchmarkResult
+• Metrics
+• BaseModel
+
+These objects become the common language of the system.
+
+Every major subsystem, including Benchmarking, Reporting,
+Database Management, Recommendation Engine, Publication
+Generator and the AI Research Copilot, communicates through
+these shared abstractions.
+
+This approach improves maintainability, consistency,
+type safety and future extensibility.
+
+
+
 
 ## 1. Single Responsibility Principle
 
@@ -535,11 +575,23 @@ Serve as an intelligent assistant for QIL.
 Capabilities
 
 * Explain benchmark results
+* Explain preprocessing decisions
+* Interpret statistical analyses
 * Recommend preprocessing strategies
-* Compare classical and quantum models
-* Answer QML questions
-* Summarize experiments
-* Assist in research interpretation
+* Compare Classical, Quantum and Hybrid models
+* Answer Quantum Machine Learning questions
+* Query historical experiments
+* Summarize experiment outcomes
+* Generate research insights
+* Assist in scientific interpretation
+
+The AI Research Copilot operates on top of QIL's own
+experiment database and research pipeline.
+
+Rather than acting as a generic conversational assistant,
+its primary role is to help researchers interpret,
+compare and reason about experimental evidence generated
+inside the platform.
 
 ---
 
@@ -668,26 +720,29 @@ Sprint 5
 
 Current Focus
 
-Research Evaluation Engine
+Research Evaluation Platform
 
 Completed Core Systems
 
 * Dataset Intelligence
 * Experiment Tracking
-* Research Preprocessing
+* Reproducibility Engine
+* Research Preprocessing Pipeline
 * Classical Model Registry
-* Classical Benchmarking
-* Comparison Matrix
+* Classical Benchmark Engine
 * Cross Validation Engine
-* Statistical Analyzer
+* Statistical Analysis Engine
+* Research Comparison Matrix
+* CSV Reporting
 
 Next Major Milestones
 
-* Benchmark Integration
+* Core Domain Layer
+* Benchmark Integration Refactor
 * Hyperparameter Optimization
-* Explainability
-* Quantum Models
-* Hybrid Models
+* Explainability Engine
+* Quantum Model Registry
+* Hybrid Benchmarking
 * AI Research Copilot
 
 ---
