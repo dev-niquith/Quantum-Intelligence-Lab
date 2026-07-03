@@ -1,16 +1,39 @@
 """
 xgboost_model.py
 
-XGBoost classifier.
-Strong classical benchmark.
+Quantum Intelligence Lab (QIL)
+
+XGBoost model implementation.
 """
 
 from xgboost import XGBClassifier
 
+from src.core.base_model import BaseModel
 
-class XGBoostModel:
+
+class XGBoostModel(BaseModel):
+    """
+    XGBoost classifier.
+    """
+
+    def __init__(self):
+
+        super().__init__(
+            model_name="XGBoost"
+        )
+
+    @property
+    def category(self):
+        """
+        Model category.
+        """
+
+        return "Classical"
 
     def build(self):
+        """
+        Build and return the XGBoost model.
+        """
 
         return XGBClassifier(
             n_estimators=100,
