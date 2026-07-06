@@ -5,23 +5,28 @@ Quantum Intelligence Lab (QIL)
 
 Research Comparison Matrix
 
-This module converts benchmark results into a
-research-friendly leaderboard and exports the results.
+Converts benchmark results into a unified
+research leaderboard.
 
 Responsibilities
 ----------------
 
-• Display ranked benchmark results.
-• Save benchmark results as CSV.
-• Act as the reporting layer between the benchmark engine
-  and future modules such as:
+✓ Generate research leaderboard
+✓ Display benchmark rankings
+✓ Export benchmark results
+✓ Provide research summaries
 
-    - Publication Generator
-    - Recommendation Engine
-    - AI Research Copilot
+Future Extensions (v2.0)
+------------------------
+
+- Publication Report Generator
+- AI Recommendation Engine
+- Research Copilot
+- Interactive Dashboard
 """
 
 from pathlib import Path
+from datetime import datetime
 
 import pandas as pd
 
@@ -29,6 +34,10 @@ import pandas as pd
 class ComparisonMatrix:
     """
     Research Comparison Matrix.
+
+    Responsible for formatting,
+    displaying and exporting benchmark
+    results.
     """
 
     def __init__(self):
@@ -39,40 +48,95 @@ class ComparisonMatrix:
             exist_ok=True
         )
 
+    # -------------------------------------------------
+    # Generate Leaderboard
+    # -------------------------------------------------
+
     def generate(
         self,
-        leaderboard: pd.DataFrame
-    ) -> pd.DataFrame:
+        leaderboard
+    ):
         """
-        Display and save the benchmark results.
+        Generate a ranked research leaderboard.
 
         Parameters
         ----------
         leaderboard
 
-            Ranked benchmark dataframe.
+            Either
+
+            • pandas DataFrame
+
+            OR
+
+            • list of dictionaries
 
         Returns
         -------
-        pandas.DataFrame
+        pandas DataFrame
         """
 
-        dataframe = leaderboard.copy()
+        if isinstance(
+            leaderboard,
+            list
+        ):
 
-        self.display(
+            dataframe = pd.DataFrame(
+                leaderboard
+            )
+
+        else:
+
+            dataframe = leaderboard.copy()
+
+        if dataframe.empty:
+
+            return dataframe
+
+        dataframe = (
+
             dataframe
+
+            .sort_values(
+
+                by="accuracy",
+
+                ascending=False
+
+            )
+
+            .reset_index(drop=True)
+
         )
 
-        self.save_csv(
-            dataframe
+        dataframe = dataframe.copy()
+
+        if "rank" in dataframe.columns:
+
+            dataframe = dataframe.drop(columns=["rank"])
+
+        dataframe.insert(
+            0,
+            "rank",
+            range(1, len(dataframe) + 1)
         )
+
+
+
 
         return dataframe
 
+    # -------------------------------------------------
+    # Display Leaderboard
+    # -------------------------------------------------
+
     def display(
         self,
-        dataframe: pd.DataFrame
+        dataframe
     ):
+        """
+        Display benchmark rankings.
+        """
 
         print()
 
@@ -80,9 +144,11 @@ class ComparisonMatrix:
         print("RESEARCH COMPARISON MATRIX")
         print("=" * 70)
 
-        display_columns = [
+        columns = [
 
             "rank",
+
+            "category",
 
             "model",
 
@@ -94,31 +160,59 @@ class ComparisonMatrix:
 
         ]
 
+        available_columns = [
+
+            column
+
+            for column in columns
+
+            if column in dataframe.columns
+
+        ]
+
         print(
 
             dataframe[
-                display_columns
+                available_columns
             ].to_string(
                 index=False
             )
 
         )
 
+    # -------------------------------------------------
+    # Export CSV
+    # -------------------------------------------------
+
     def save_csv(
         self,
-        dataframe: pd.DataFrame
+        dataframe,
+        dataset_name="dataset"
     ):
+        """
+        Save benchmark results using a unique
+        timestamped filename.
+
+        Example
+        -------
+        breast_cancer_20260702_231055.csv
+        """
+
+        timestamp = datetime.now().strftime(
+            "%Y%m%d_%H%M%S"
+        )
+
+        filename = (
+            f"{dataset_name}_{timestamp}.csv"
+        )
 
         output_file = (
-
             self.output_directory /
-
-            "benchmark_results.csv"
-
+            filename
         )
 
         export_dataframe = dataframe.drop(
-            columns=["full_statistics"],
+            columns=["statistics"],
             errors="ignore"
         )
 
@@ -128,48 +222,83 @@ class ComparisonMatrix:
         )
 
         print()
-
         print(
             f"Research report saved to:\n{output_file}"
         )
 
+        return output_file
+
+
+    # -------------------------------------------------
+    # Best Model
+    # -------------------------------------------------
+
     def top_model(
         self,
-        dataframe: pd.DataFrame
+        dataframe
     ):
         """
-        Return the best performing model.
+        Return the best model.
         """
+
+        if dataframe.empty:
+
+            return None
 
         return dataframe.iloc[0]
 
+    # -------------------------------------------------
+    # Summary
+    # -------------------------------------------------
+
     def summary(
         self,
-        dataframe: pd.DataFrame
+        dataframe
     ):
+        """
+        Print research summary.
+        """
 
         best = self.top_model(
             dataframe
         )
 
+        if best is None:
+
+            return
+
         print()
 
         print("=" * 70)
-        print("BENCHMARK SUMMARY")
+        print("RESEARCH SUMMARY")
         print("=" * 70)
 
         print(
-            f"Best Model : {best['model']}"
+            f"Best Model      : {best['model']}"
         )
 
         print(
-            f"Mean Accuracy : {best['accuracy']:.4f}"
+            f"Category        : {best['category']}"
         )
 
         print(
-            f"Std Dev : {best['accuracy_std']:.4f}"
+            f"Mean Accuracy   : "
+            f"{best['accuracy']:.4f}"
         )
 
         print(
-            f"F1 Score : {best['f1']:.4f}"
+            f"Std Deviation   : "
+            f"{best['accuracy_std']:.4f}"
         )
+
+        print(
+            f"F1 Score        : "
+            f"{best['f1']:.4f}"
+        )
+
+        if "training_time" in dataframe.columns:
+
+            print(
+                f"Training Time   : "
+                f"{best['training_time']:.4f} sec"
+            )

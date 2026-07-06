@@ -182,83 +182,27 @@ class CrossValidator:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             # ----------------------------------
             # Preprocessing
             # ----------------------------------
 
-            pipeline = PreprocessingPipeline(
-                k_features=15,
-                pca_components=8
-            )
+            #pipeline = PreprocessingPipeline(
+            #    k_features=15,
+            #    pca_components=8
+            #)
 
-            X_train = pipeline.fit_transform(
-                X_train,
-                y_train
-            )
+            #X_train = pipeline.fit_transform(
+            #    X_train,
+            #    y_train
+            #)
 
-            X_test = pipeline.transform(
-                X_test
-            )
+            #X_test = pipeline.transform(
+            #    X_test
+            #)
+
+
+
+
 
             # ----------------------------------
             # Fresh model for every fold
