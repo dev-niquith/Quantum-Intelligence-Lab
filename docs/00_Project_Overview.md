@@ -1,187 +1,224 @@
 # Quantum Intelligence Lab (QIL)
 
-Version: 0.5.0 (Development)
+**Version:** v1.0.0 (Stable Release)
 
-Author:
+**Author:**  
 Dev K. Niquith
 
 ---
 
 # Vision
 
-Quantum Intelligence Lab (QIL) is a research-grade Quantum Machine Learning platform designed to bridge the gap between Classical Machine Learning and Quantum Machine Learning.
+Quantum Intelligence Lab (QIL) is a modular, research-oriented Machine Learning benchmarking platform designed to unify Classical Machine Learning, Quantum Machine Learning and future Hybrid Machine Learning workflows within a single engineering framework.
 
-Unlike traditional QML repositories that demonstrate isolated algorithms or notebooks, QIL is being engineered as a modular software platform capable of:
+Unlike many Quantum Machine Learning repositories that consist of isolated notebooks or individual experiments, QIL is engineered as a scalable software platform that emphasizes reproducibility, modularity and research-quality evaluation.
 
-- Dataset Intelligence
-- Automated Benchmarking
-- Research Reproducibility
-- Explainability
-- Classical vs Quantum Comparisons
-- Hybrid Quantum-Classical Research
-- AI-Assisted Research Guidance
-
-The long-term objective is to provide researchers, engineers, students and startups with a complete environment for designing, evaluating and understanding Quantum Machine Learning systems.
+Version 1.0 establishes the core benchmarking infrastructure, while future versions will expand the platform into an intelligent research ecosystem.
 
 ---
 
-# Primary Goal
+# Primary Goals
 
-The project is being developed with three objectives:
+QIL is developed around three long-term objectives.
 
-1. Demonstrate production-quality software engineering.
+### 1. Demonstrate Production-Quality Software Engineering
 
-2. Demonstrate practical Quantum Machine Learning engineering.
+Design a maintainable, modular and extensible architecture following modern software engineering practices.
 
-3. Build an extensible research platform rather than a collection of disconnected experiments.
+### 2. Demonstrate Practical Quantum Machine Learning Engineering
+
+Provide a unified framework for evaluating Classical, Quantum and Hybrid Machine Learning models using consistent methodologies.
+
+### 3. Build an Extensible Research Platform
+
+Develop a reusable research environment rather than a collection of disconnected experiments or demonstration notebooks.
 
 ---
 
 # Project Philosophy
 
-Every module inside QIL must satisfy the following principles.
+Every module inside QIL follows the same engineering principles.
 
 ## 1. Modular
 
-Each component should have a single responsibility.
+Each component has a single, clearly defined responsibility.
 
-Example
+Examples
 
-Dataset Intelligence should never train models.
+- Dataset Intelligence analyzes datasets.
+- Preprocessing transforms features.
+- Benchmarking evaluates models.
+- Reporting generates research outputs.
 
-Benchmarking should never compute feature importance.
+Responsibilities remain independent to improve maintainability.
 
 ---
 
 ## 2. Reusable
 
-Every module should work for:
+Every subsystem should operate across multiple learning paradigms without architectural redesign.
 
-- Classical ML
-- Quantum ML
-- Hybrid ML
+Supported architectures include:
 
-without requiring major changes.
+- Classical Machine Learning
+- Quantum Machine Learning
+- Hybrid Quantum-Classical Machine Learning
 
 ---
 
 ## 3. Research-Oriented
 
-The platform should follow research best practices:
+Every benchmark follows reproducible research practices.
+
+Implemented practices include:
 
 - Cross Validation
-- Reproducibility
-- Statistical Analysis
-- Explainability
-- Benchmarking
-- Experiment Tracking
+- Statistical Evaluation
+- Reproducible Configuration
+- Unified Benchmarking
+- Automated Reporting
 
-instead of relying on a single train/test split.
+Future releases will extend this with Explainability, Optimization and AI-assisted experimentation.
 
 ---
 
 ## 4. Extensible
 
-Adding a new model such as QSVM or VQC should require minimal modifications to the surrounding infrastructure.
+New datasets, models and evaluation techniques should integrate through standardized interfaces instead of modifying existing workflows.
+
+This allows QIL to grow without increasing architectural complexity.
 
 ---
 
 # Current Architecture
 
-Current high-level workflow:
+Current high-level execution pipeline
 
+```text
 Dataset
-↓
-
-Dataset Intelligence
-↓
-
-Experiment Tracking
-↓
-
-Preprocessing
-↓
-
-Benchmark Runner
-↓
-
+    │
+    ▼
+Configuration
+    │
+    ▼
+Dataset Loader
+    │
+    ▼
+Research Preprocessing
+    │
+    ▼
+Model Registries
+(Classical / Quantum)
+    │
+    ▼
+Unified Research Benchmark
+    │
+    ▼
 Cross Validation
-↓
-
+    │
+    ▼
 Statistical Analysis
-↓
-
+    │
+    ▼
 Comparison Matrix
-↓
+    │
+    ▼
+Research Reports
+```
 
-Reports
-
-Future architecture will extend this workflow to include Quantum Models, Hybrid Models, Explainability, Recommendation Engine and AI Research Copilot.
+The architecture is intentionally registry-driven so future Classical, Quantum and Hybrid models can be integrated without modifying the benchmark engine.
 
 ---
 
 # Current Development Status
 
-Current Phase:
+**Current Stable Release**
 
-Research Evaluation Engine
+✅ Version 1.0.0
 
-Overall Progress:
+### Completed
 
-Approximately 35%
-
-Major completed subsystems include:
-
-- Dataset Intelligence
-- Experiment Tracking
+- Dataset Loading
+- Configuration Management
 - Research Preprocessing
-- Classical Benchmarking
-- Model Registry
+- Classical Model Registry
+- Quantum Registry
+- Unified Research Benchmark
+- Statistical Evaluation
 - Comparison Matrix
-- Cross Validation
-- Statistical Analysis
+- Timestamped Research Reports
+- Modular Documentation
 
-Current sprint:
+### Experimental
 
-Sprint 5
+- Variational Quantum Classifier (VQC)
 
-Focus:
+### Planned for Version 2.0
 
-Research Evaluation Engine
+- Explainability
+- Hyperparameter Optimization
+- Expanded Quantum Models
+- Hybrid Machine Learning
+- Quantum Resource Analysis
+- Research Recommendation Engine
 
 ---
 
-# Long-Term Vision
+# Platform Capabilities
 
-The completed platform should support:
+## Classical Machine Learning
 
-Classical Models
+Implemented
 
 - Logistic Regression
 - Random Forest
+- Support Vector Machine
+- Multi-Layer Perceptron
 - XGBoost
-- SVM
-- MLP
 
-Quantum Models
+---
+
+## Quantum Machine Learning
+
+Current
+
+- Variational Quantum Classifier (VQC)
+
+Planned
 
 - QSVM
-- VQC
 - EstimatorQNN
 - SamplerQNN
+- Additional Quantum Kernels
 
-Hybrid Models
+---
 
-- Quantum Neural Networks
-- Hybrid Pipelines
+## Hybrid Machine Learning
 
-Research Features
+Planned
 
-- Hyperparameter Optimization
+- Hybrid Quantum Neural Networks
+- Quantum Feature Extraction
+- Hybrid Benchmark Pipelines
+
+---
+
+## Research Features
+
+Current
+
+- Cross Validation
+- Statistical Analysis
+- Unified Benchmarking
+- Automated CSV Reports
+- Timestamped Experiment Outputs
+
+Future
+
 - Explainability
-- Stability Analysis
+- Hyperparameter Optimization
 - Publication Reports
-- Recommendation Engine
+- Quantum Resource Profiling
 - AI Research Copilot
 
 ---
@@ -191,44 +228,78 @@ Research Features
 QIL is designed for:
 
 - AI Engineers
+- Machine Learning Engineers
 - Quantum Computing Engineers
+- Quantum Machine Learning Engineers
 - Data Scientists
 - Researchers
-- Students
+- Graduate Students
 - Startups
+- Research Teams
 
 ---
 
 # Repository Philosophy
 
-The repository is intended to demonstrate:
+This repository demonstrates practical engineering rather than isolated algorithm implementations.
+
+Core focus areas include:
 
 - Software Architecture
 - Machine Learning Engineering
 - Quantum Machine Learning
 - Research Engineering
 - Reproducible Science
-- Explainable AI
-- Product Engineering
-
-rather than functioning as a simple tutorial repository.
+- Statistical Benchmarking
+- Product-Oriented Development
 
 ---
 
 # Development Strategy
 
-Development follows an iterative sprint-based workflow.
+QIL evolves through stable, incremental releases.
 
-Each sprint delivers:
+Each version introduces complete subsystems while preserving compatibility with previous releases.
 
-- Fully functional features
+### Version 1.0
+
+Research Benchmark Platform
+
+### Version 2.0
+
+Research Intelligence Platform
+
+### Version 3.0
+
+AI-Powered Quantum Research Ecosystem
+
+Each release includes:
+
+- Functional features
 - Unit tests
 - Documentation
-- Git version tags
-- Incremental architectural improvements
+- Semantic versioning
+- Architectural improvements
 
-This ensures that every tagged version of QIL remains stable, reproducible and usable.
+This development strategy ensures every released version remains stable, reproducible and immediately usable.
 
 ---
 
-End of Document
+# Long-Term Vision
+
+The long-term objective is to transform QIL into a complete Quantum Machine Learning research platform capable of:
+
+- Benchmarking Classical, Quantum and Hybrid models
+- Managing reproducible experiments
+- Explaining model behavior
+- Optimizing model performance
+- Measuring quantum resource utilization
+- Generating publication-ready reports
+- Providing AI-assisted research guidance
+
+Ultimately, QIL aims to bridge the gap between Artificial Intelligence and Quantum Computing through a unified engineering framework suitable for both education and real-world research.
+
+---
+
+**End of Document**
+

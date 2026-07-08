@@ -2,7 +2,7 @@
 
 **Project:** Quantum Intelligence Lab (QIL)
 
-**Version:** 0.5.0 (Development)
+**Version:** v1.0.0 (Classical Research Platform)
 
 ---
 
@@ -16,9 +16,10 @@ The objectives are to:
 * Ensure consistency.
 * Improve maintainability.
 * Support collaborative development.
-* Make the codebase understandable for both humans and AI assistants.
+* Preserve reproducibility.
+* Make the codebase understandable for both developers and AI assistants.
 
-These standards apply to every module in the project.
+These standards apply to every module within QIL.
 
 ---
 
@@ -45,10 +46,12 @@ DatasetLoader
 
 Loads datasets
 +
-Trains models
+Runs benchmarks
 +
-Creates reports
+Generates reports
 ```
+
+Every class should solve exactly one problem.
 
 ---
 
@@ -64,7 +67,7 @@ datasets/
 Only dataset-related logic.
 ```
 
-Never place preprocessing, benchmarking or reporting logic inside the dataset module.
+Never place preprocessing, benchmarking or reporting logic inside dataset modules.
 
 ---
 
@@ -76,30 +79,46 @@ Write components that can be reused by:
 * Quantum ML
 * Hybrid ML
 
-Avoid implementations tied to a single model unless absolutely necessary.
+Avoid implementations tied to a single algorithm whenever possible.
 
 ---
 
 ## 4. Extensibility
 
-Every design decision should make adding future functionality easier.
+Design new functionality so future features require minimal modification.
 
 Example
 
-A new model such as QSVM should be added without modifying the Benchmark Runner.
+A new model such as QSVM should be registered through the Model Registry without modifying the benchmark engine.
+
+---
+
+## 5. Research-First Engineering
+
+QIL is a research platform.
+
+Engineering decisions should prioritize:
+
+* Reproducibility
+* Statistical validity
+* Fair benchmarking
+* Maintainability
+
+rather than only execution speed.
 
 ---
 
 # Python Style
 
-Follow the recommendations of **PEP 8** unless there is a project-specific reason to do otherwise.
+Follow **PEP 8** unless a documented project-specific exception exists.
 
 Guidelines
 
-* Four spaces for indentation.
-* Maximum line length around 88-100 characters.
-* One import per line.
-* Blank lines between logical sections.
+* Four-space indentation
+* Line length around 88–100 characters
+* One import per line
+* Blank lines between logical sections
+* Meaningful whitespace for readability
 
 ---
 
@@ -113,16 +132,17 @@ Examples
 
 ```text
 dataset_loader.py
-metrics_calculator.py
 cross_validator.py
+research_benchmark.py
+config_manager.py
 ```
 
 Avoid
 
 ```text
 DatasetLoader.py
-Metrics.py
-MyFile.py
+Benchmark.py
+Utility.py
 ```
 
 ---
@@ -137,7 +157,8 @@ Examples
 DatasetLoader
 CrossValidator
 StatisticalAnalyzer
-ModelRegistry
+ResearchBenchmark
+ConfigManager
 ```
 
 ---
@@ -151,8 +172,8 @@ Examples
 ```python
 load_dataset()
 calculate_metrics()
-run_benchmark()
-save_experiment()
+execute_benchmark()
+save_results()
 ```
 
 ---
@@ -166,16 +187,18 @@ Good
 ```python
 feature_matrix
 target_labels
-experiment_results
+benchmark_results
 confidence_interval
+dataset_name
+output_directory
 ```
 
 Avoid
 
 ```python
 a
-b
 temp
+value
 data1
 ```
 
@@ -189,6 +212,7 @@ Example
 
 ```python
 DEFAULT_RANDOM_SEED = 42
+REPORT_DIRECTORY = "reports"
 MAX_ITERATIONS = 1000
 ```
 
@@ -210,7 +234,7 @@ Avoid
 from datasets.dataset_loader import DatasetLoader
 ```
 
-Avoid wildcard imports.
+Never use wildcard imports.
 
 Incorrect
 
@@ -218,11 +242,13 @@ Incorrect
 from module import *
 ```
 
----
+Prefer explicit imports for readability.
+
+
 
 # File Structure
 
-A typical module should follow this order.
+Every module should follow this order.
 
 ```text
 Module Docstring
@@ -242,7 +268,7 @@ Main Execution (if required)
 
 # Docstrings
 
-Every public class and function should include a docstring.
+Every public class and function should include a complete docstring.
 
 Class Example
 
@@ -276,6 +302,8 @@ def load_dataset(name):
     """
 ```
 
+Docstrings should describe purpose rather than implementation.
+
 ---
 
 # Comments
@@ -285,7 +313,7 @@ Comments should explain intent.
 Good
 
 ```python
-# Standardize feature values before PCA.
+# Standardize features before PCA.
 ```
 
 Avoid
@@ -295,13 +323,13 @@ Avoid
 i += 1
 ```
 
-The code already explains that.
+The code should explain obvious operations.
 
 ---
 
 # Error Handling
 
-Handle expected errors gracefully.
+Handle expected errors explicitly.
 
 Preferred
 
@@ -312,33 +340,29 @@ except FileNotFoundError:
     ...
 ```
 
-Avoid broad exception handling.
-
-Incorrect
+Avoid
 
 ```python
 except:
     ...
 ```
 
-Catch specific exceptions whenever possible.
+Catch only the exceptions you expect.
 
 ---
 
 # Configuration
 
-Project settings belong in:
+All configurable values belong in
 
 ```text
 configs/config.yaml
 ```
 
-Avoid hardcoded values.
-
-Good
+Preferred
 
 ```python
-random_seed = config["random_seed"]
+random_seed = config.get("random_seed")
 ```
 
 Avoid
@@ -347,15 +371,44 @@ Avoid
 random_seed = 42
 ```
 
-unless it is a documented default.
+unless it is a documented fallback value.
+
+---
+
+# Reporting Standards
+
+Generated reports should:
+
+* Include dataset-aware filenames
+* Include timestamps
+* Never overwrite previous reports
+* Preserve experiment history
+
+Preferred filenames
+
+```text
+breast_cancer_20260707_001221.csv
+
+iris_20260708_143012.csv
+
+wine_20260709_103540.csv
+```
+
+Avoid generic filenames such as
+
+```text
+results.csv
+
+benchmark.csv
+```
 
 ---
 
 # Logging
 
-Prefer structured logging over excessive print statements.
+Prefer structured logging over print statements.
 
-Development
+Current
 
 ```python
 print("Benchmark started.")
@@ -367,13 +420,11 @@ Future
 logger.info("Benchmark started.")
 ```
 
-Logging will gradually replace debugging prints as QIL matures.
-
 ---
 
 # Type Hints
 
-Use type hints where they improve readability.
+Use type hints whenever they improve readability.
 
 Example
 
@@ -396,51 +447,56 @@ def calculate_metrics(
 
 Every major subsystem should include unit tests.
 
-Suggested naming
+Suggested names
 
 ```text
 test_dataset_loader.py
+
 test_cross_validator.py
-test_model_registry.py
+
+test_research_benchmark.py
 ```
 
-Tests should verify:
+Tests should verify
 
-* Correct outputs.
-* Edge cases.
-* Invalid inputs.
-* Reproducibility where applicable.
+* Correct outputs
+* Invalid inputs
+* Edge cases
+* Reproducibility
+* Configuration loading
 
 ---
 
 # Module Boundaries
 
-Each module owns a specific responsibility.
+Each module owns one responsibility.
 
-| Module          | Responsibility          |
-| --------------- | ----------------------- |
-| datasets        | Dataset analysis        |
-| preprocessing   | Data preparation        |
-| models          | Model implementations   |
-| evaluation      | Metric computation      |
-| benchmarking    | Benchmark orchestration |
-| reporting       | Report generation       |
-| explainability  | Model interpretation    |
-| optimization    | Hyperparameter tuning   |
-| recommendations | Research guidance       |
+| Module | Responsibility |
+|----------|----------------|
+| datasets | Dataset analysis |
+| preprocessing | Data preparation |
+| models | Model implementation |
+| evaluation | Metrics & statistics |
+| benchmarking | Benchmark orchestration |
+| reporting | Report generation |
+| explainability | Model interpretation |
+| optimization | Hyperparameter tuning |
+| recommendations | Research guidance |
 
-Do not mix responsibilities across modules.
+Responsibilities should never overlap.
 
 ---
 
 # Architectural Dependency Rules
 
-Dependencies should always flow downward.
+Dependencies always flow downward.
 
 Correct
 
 ```text
 Reporting
+    ↓
+Benchmarking
     ↓
 Evaluation
     ↓
@@ -461,77 +517,78 @@ Reporting
 
 Lower layers must never depend on higher layers.
 
----
+
 
 # Benchmark Standards
 
 Every benchmark should include:
 
-* Preprocessing
-* Cross Validation
+* Unified preprocessing
+* Stratified Cross Validation
 * Multiple evaluation metrics
 * Statistical summaries
+* Dataset-aware reporting
 * Reproducible configuration
 
-Benchmarks should not rely on a single train/test split.
+Benchmarks should never rely solely on a single train/test split.
 
 ---
 
 # Documentation Standards
 
-Every completed subsystem should include:
+Every completed subsystem must include:
 
 * Docstrings
 * Unit tests
 * Documentation updates
-* Integration notes
+* Integration verification
 
-Major architectural changes should also update:
+Whenever architecture changes, update:
 
+* `00_Project_Overview.md`
 * `01_System_Architecture.md`
 * `02_Current_Progress.md`
 * `03_Development_Roadmap.md`
+* `04_Folder_Reference.md`
 * `05_Module_Reference.md`
 * `06_AI_CONTEXT.md`
+* `08_Research_Methodology.md`
+* `09_Development_Log.md`
+* `10_Future_Vision.md`
+
+Documentation is treated as part of the implementation rather than an afterthought.
 
 ---
 
 # Git Workflow
 
-Each completed milestone should follow this sequence.
+Every completed milestone should follow this sequence.
 
-1. Run tests.
-2. Review code.
-3. Update documentation.
-4. Commit changes.
-5. Push to GitHub.
-6. Create a version tag for stable milestones.
+1. Run unit tests.
+2. Verify benchmark outputs.
+3. Review code.
+4. Update documentation.
+5. Commit changes.
+6. Push to GitHub.
+7. Create a stable version tag.
 
-Commit messages should be clear.
-
-Good
-
-```text
-Implemented cross validation engine
-```
-
-Good
+Good commit messages
 
 ```text
-Added SHAP explainability module
+Implemented Research Benchmark Engine
+
+Added timestamped dataset-aware reporting
+
+Completed Statistical Evaluation Engine
 ```
 
 Avoid
 
 ```text
 Update
-```
 
-```text
 Fix
-```
 
-```text
 Changes
 ```
 
@@ -541,43 +598,51 @@ Changes
 
 When using AI assistants during development:
 
-* Preserve existing architecture.
-* Avoid introducing duplicate functionality.
-* Prefer extending existing modules over creating new ones.
-* Explain architectural changes before implementing them.
-* Keep generated code consistent with project conventions.
-* Ensure new code remains compatible with future Classical, Quantum and Hybrid integrations.
+* Preserve modular architecture.
+* Extend existing modules before creating new ones.
+* Avoid duplicate functionality.
+* Respect established interfaces.
+* Keep implementations beginner-friendly yet professionally structured.
+* Explain architectural changes before implementation.
+* Update documentation whenever functionality changes.
+* Consider future Classical, Quantum and Hybrid compatibility.
+
+AI-generated code should integrate naturally with the existing architecture instead of introducing isolated solutions.
 
 ---
 
 # Definition of Done
 
-A feature is considered complete only when:
+A feature is complete only when:
 
 * Implementation is finished.
-* Code follows project standards.
+* Coding standards are satisfied.
 * Unit tests pass.
-* Documentation is updated.
 * Integration is verified.
+* Documentation is updated.
+* Reports generate correctly.
 * Changes are committed and pushed.
-* A stable version tag is created when appropriate.
+* Stable version tags are created when appropriate.
 
 ---
 
 # Final Principle
 
-Every contribution to QIL should improve at least one of the following:
+Every contribution to Quantum Intelligence Lab should improve at least one of the following:
 
 * Readability
 * Maintainability
 * Extensibility
 * Reproducibility
+* Statistical validity
 * Research quality
 * Software architecture
+* Documentation quality
 * User experience
 
-The goal is not simply to write code, but to build a research-grade engineering platform that remains understandable and extensible as it grows.
+The objective is not merely to write working code, but to build a long-term, research-grade Machine Learning and Quantum Machine Learning engineering platform that remains understandable, reproducible and extensible as it evolves.
 
 ---
 
 **End of Document**
+

@@ -2,404 +2,537 @@
 
 **Project:** Quantum Intelligence Lab (QIL)
 
-**Version:** 0.5.0 (Development)
+**Version:** v1.0.0
+
+**Architecture Style:** Layered Modular Research Platform
 
 ---
 
 # Purpose
 
-This document describes the complete software architecture of Quantum Intelligence Lab (QIL), including its modules, responsibilities, data flow, dependency relationships, and future expansion strategy.
+This document describes the complete software architecture of Quantum Intelligence Lab (QIL), including its major subsystems, responsibilities, data flow, dependency hierarchy, extension points and long-term evolution strategy.
 
-QIL is designed as a modular research platform rather than a collection of notebooks or isolated scripts.
+Unlike notebook-based Quantum Machine Learning repositories, QIL is engineered as a modular research platform where each subsystem performs a clearly defined responsibility and communicates through stable interfaces.
 
-Each module has a clearly defined responsibility and communicates with other modules through well-defined interfaces.
+The architecture emphasizes:
+
+* Modularity
+* Reproducibility
+* Extensibility
+* Statistical validity
+* Research-grade benchmarking
+* Maintainability
+
+The same architecture is designed to support Classical Machine Learning, Quantum Machine Learning and Hybrid Quantum-Classical Machine Learning without requiring significant changes to the surrounding infrastructure.
 
 ---
 
 # High-Level Architecture
 
+```text
+                         ┌──────────────────────────┐
+                         │      User / Researcher   │
+                         └─────────────┬────────────┘
+                                       │
+                                       ▼
+                     ┌─────────────────────────────────┐
+                     │      Configuration Manager      │
+                     │        (config.yaml)            │
+                     └─────────────┬───────────────────┘
+                                   │
+                                   ▼
+                     ┌─────────────────────────────────┐
+                     │        Dataset Loader           │
+                     └─────────────┬───────────────────┘
+                                   │
+                                   ▼
+             ┌─────────────────────────────────────────────────┐
+             │        Dataset Intelligence Engine              │
+             │ Profiling • QRI • Complexity • Correlation      │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │      Experiment Tracking Layer                  │
+             │ SQLite • Logging • Reproducibility              │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │     Research Preprocessing Pipeline             │
+             │ Scaling • Feature Selection • PCA               │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │        Unified Research Benchmark               │
+             └─────────────┬───────────────────────────────────┘
+                           │
+        ┌──────────────────┼──────────────────┐
+        ▼                  ▼                  ▼
+┌────────────────┐ ┌────────────────┐ ┌────────────────┐
+│ Classical ML   │ │ Quantum ML     │ │ Hybrid ML      │
+│ Registry        │ │ Registry       │ │ Registry       │
+└───────┬────────┘ └───────┬────────┘ └───────┬────────┘
+        └──────────────────┼──────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │      Cross Validation Engine                    │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │        Metrics Calculator                       │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │       Statistical Analyzer                      │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │        Comparison Matrix                        │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │      Reporting & Export Layer                   │
+             │ Timestamped CSV • PDF (Future)                  │
+             └─────────────┬───────────────────────────────────┘
+                           │
+                           ▼
+             ┌─────────────────────────────────────────────────┐
+             │      AI Research Copilot (Future)               │
+             └─────────────────────────────────────────────────┘
 ```
-                          +----------------------+
-                          |      User / UI       |
-                          +----------+-----------+
-                                     |
-                                     |
-                                     v
-                        +--------------------------+
-                        |       Dataset Loader     |
-                        +------------+-------------+
-                                     |
-                                     v
-                    +----------------------------------+
-                    |     Dataset Intelligence Engine  |
-                    +----------------+-----------------+
-                                     |
-                                     |
-                                     v
-                   +-----------------------------------+
-                   |     Experiment Tracking Layer     |
-                   +----------------+------------------+
-                                     |
-                                     |
-                                     v
-                 +----------------------------------------+
-                 |     Research Preprocessing Pipeline    |
-                 +----------------+-----------------------+
-                                     |
-                                     |
-                                     v
-                     +-------------------------------+
-                     |       Model Registry          |
-                     +---------------+---------------+
-                                     |
-        +----------------------------+---------------------------+
-        |                            |                           |
-        |                            |                           |
-        v                            v                           v
-+----------------+         +------------------+        +------------------+
-| Classical ML   |         | Quantum Models   |        | Hybrid Models    |
-+-------+--------+         +--------+---------+        +--------+---------+
-        |                           |                           |
-        +-------------+-------------+-------------+-------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |     Benchmark Runner Engine      |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |     Cross Validation Engine      |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |     Metrics Calculator           |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |    Statistical Analyzer          |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |      Domain Layer (Core)         |
-                     |----------------------------------|
-                     | ExperimentResult                 |
-                     | BenchmarkResult                  |
-                     | BaseModel                        |
-                     | Metrics                          |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |    Comparison Matrix             |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |        Reporting Layer           |
-                     +----------------+-----------------+
-                                      |
-                                      v
-                     +----------------------------------+
-                     |     AI Research Copilot          |
-                     +----------------------------------+
-```
+
+---
+
+# Architectural Overview
+
+The current QIL architecture is organized as a sequence of independent research layers.
+
+Each layer consumes the output of the previous layer while remaining isolated from its internal implementation.
+
+This design provides several engineering advantages:
+
+* Components remain reusable.
+* Individual modules can evolve independently.
+* New Machine Learning models can be integrated through registries.
+* Benchmarking logic remains model-agnostic.
+* Evaluation remains statistically consistent across all supported algorithms.
+
+As additional Quantum Machine Learning and Hybrid Machine Learning models are introduced, they automatically participate in the same preprocessing, benchmarking, evaluation and reporting pipeline.
 
 ---
 
 # Core Design Principles
 
-Every architectural decision in QIL follows five engineering principles.
+Every architectural decision in Quantum Intelligence Lab follows a consistent set of engineering principles.
 
+These principles ensure that the project remains maintainable as it grows from a Classical Machine Learning benchmarking framework into a comprehensive Quantum Machine Learning research platform.
 
+---
 
 # Domain-Driven Architecture
 
-As QIL evolves, data exchanged between modules should no longer
-be represented as loose dictionaries or ad-hoc DataFrames.
+QIL is gradually transitioning toward a domain-driven architecture.
 
-Instead, the platform introduces a Core Domain Layer containing
-shared domain objects.
+Rather than exchanging loosely structured dictionaries or ad-hoc DataFrames between modules, the platform is introducing shared domain objects that become the common language of the system.
 
 Examples include:
 
-• ExperimentResult
-• BenchmarkResult
-• Metrics
-• BaseModel
+* ExperimentResult
+* BenchmarkResult
+* FoldResult
+* Metrics
+* BaseModel
 
-These objects become the common language of the system.
+These objects will eventually be shared across:
 
-Every major subsystem, including Benchmarking, Reporting,
-Database Management, Recommendation Engine, Publication
-Generator and the AI Research Copilot, communicates through
-these shared abstractions.
+* Benchmarking
+* Reporting
+* Database Management
+* Recommendation Engine
+* Publication Generator
+* AI Research Copilot
 
-This approach improves maintainability, consistency,
-type safety and future extensibility.
+This approach improves:
 
+* Type safety
+* Maintainability
+* Readability
+* Extensibility
+* Future API compatibility
 
-
+---
 
 ## 1. Single Responsibility Principle
 
-Each module performs exactly one responsibility.
+Every module performs one well-defined responsibility.
 
 Examples:
 
 * Dataset Intelligence analyzes datasets.
-* Benchmark Runner executes experiments.
-* Statistical Analyzer computes statistics.
-* Reporting Layer generates reports.
+* Preprocessing transforms datasets.
+* Benchmarking evaluates models.
+* Reporting exports research results.
 
-No module should perform unrelated tasks.
+No module should perform responsibilities outside its designated scope.
 
 ---
 
 ## 2. Modular Design
 
-Every subsystem should be independently replaceable.
+Each subsystem should be replaceable without affecting the remaining architecture.
 
-Example:
-
-The benchmark engine should work with:
-
-* Logistic Regression
-* Random Forest
-* QSVM
-* VQC
-
-without modification.
+For example, replacing a Random Forest with a Variational Quantum Classifier should not require modifications to the benchmarking engine or reporting layer.
 
 ---
 
 ## 3. Research-Oriented Engineering
 
-Research quality is prioritized over simple demonstrations.
+QIL prioritizes research quality over demonstration simplicity.
 
-Examples:
+The platform emphasizes:
 
 * Stratified Cross Validation
-* Reproducibility
 * Statistical Analysis
+* Reproducibility
+* Configuration Management
 * Experiment Tracking
-* Explainability
+* Benchmark Consistency
+
+instead of relying solely on single train/test evaluations.
 
 ---
 
 ## 4. Extensibility
 
-Future models should plug into existing interfaces.
+Future capabilities should integrate through existing interfaces rather than modifying established workflows.
 
-The surrounding infrastructure should remain unchanged.
+This enables new models, datasets, evaluation techniques and reporting formats to be introduced with minimal architectural disruption.
 
 ---
 
 ## 5. Separation of Concerns
 
-The project separates:
+Responsibilities are intentionally separated across dedicated layers.
 
-* Data
-* Models
+Examples include:
+
+* Dataset Intelligence
+* Experiment Tracking
+* Preprocessing
+* Model Registries
+* Benchmarking
 * Evaluation
 * Reporting
-* Recommendations
+* AI Assistance
 
-into different modules.
+Each layer communicates only through clearly defined interfaces, reducing coupling and improving long-term maintainability.
 
 ---
 
-# Current Data Flow
 
-Current execution pipeline:
 
-```
-Dataset
+# Current Execution Flow
 
-↓
+The current execution pipeline represents the complete workflow executed by QIL v1.0 for a typical benchmarking experiment.
 
+```text
+Configuration (config.yaml)
+            │
+            ▼
 Dataset Loader
-
-↓
-
-Dataset Intelligence
-
-↓
-
-Experiment Logger
-
-↓
-
-Preprocessing Pipeline
-
-↓
-
+            │
+            ▼
+Dataset Intelligence Engine
+            │
+            ▼
+Experiment Tracking
+            │
+            ▼
+Research Preprocessing Pipeline
+            │
+            ▼
+Research Benchmark
+            │
+            ▼
 Model Registry
-
-↓
-
-Cross Validation
-
-↓
-
+            │
+            ▼
+Cross Validation Engine
+            │
+            ▼
 Metrics Calculator
-
-↓
-
+            │
+            ▼
 Statistical Analyzer
-
-↓
-
+            │
+            ▼
 Comparison Matrix
-
-↓
-
-CSV Report
+            │
+            ▼
+Timestamped CSV Report
 ```
+
+This pipeline ensures that every evaluated model follows the exact same preprocessing, evaluation and reporting workflow, guaranteeing fair comparisons and reproducible experiments.
 
 ---
 
-# Future Data Flow
+# Future Execution Flow
 
-Target workflow for Version 1.0
+The long-term architecture extends the existing pipeline without altering its fundamental structure.
 
-```
-Dataset
-
-↓
-
+```text
+Configuration
+      │
+      ▼
+Dataset Loader
+      │
+      ▼
 Dataset Intelligence
-
-↓
-
+      │
+      ▼
 Experiment Tracking
-
-↓
-
+      │
+      ▼
 Research Memory
-
-↓
-
-Preprocessing
-
-↓
-
+      │
+      ▼
+Preprocessing Pipeline
+      │
+      ▼
 Hyperparameter Optimization
-
-↓
-
-Model Registry
-
-↓
-
+      │
+      ▼
+Unified Research Benchmark
+      │
+      ▼
 Classical Models
-
-↓
-
 Quantum Models
-
-↓
-
 Hybrid Models
-
-↓
-
+      │
+      ▼
 Cross Validation
-
-↓
-
+      │
+      ▼
+Metrics
+      │
+      ▼
 Statistical Analysis
-
-↓
-
-Explainability
-
-↓
-
-Resource Analysis
-
-↓
-
+      │
+      ▼
+Explainability Layer
+      │
+      ▼
+Quantum Resource Analysis
+      │
+      ▼
 Comparison Matrix
-
-↓
-
-Recommendation Engine
-
-↓
-
+      │
+      ▼
 Publication Generator
-
-↓
-
+      │
+      ▼
 AI Research Copilot
 ```
+
+This evolution allows QIL to grow into a full research platform while preserving compatibility with earlier modules.
 
 ---
 
 # Module Responsibilities
 
-## Dataset Intelligence
+## Configuration Manager
 
 Purpose
 
-Analyze datasets before model training.
+Centralize all runtime configuration for the platform.
 
 Responsibilities
 
-* Feature Count
-* Sample Count
-* Correlation Analysis
-* Entropy Analysis
-* Complexity Analysis
-* Class Balance
-* QML Suitability
-* QRI Calculation
+* Load YAML configuration
+* Provide nested configuration access
+* Manage random seeds
+* Store benchmark settings
+* Configure datasets
+* Support future runtime overrides
+
+Output
+
+Central configuration shared across the application.
+
+Current Status
+
+✅ Stable
+
+---
+
+## Dataset Loader
+
+Purpose
+
+Serve as the unified entry point for all datasets used inside QIL.
+
+Responsibilities
+
+* Load built-in benchmark datasets
+* Standardize feature and target formats
+* Return pandas DataFrames and Series
+* Validate requested datasets
+* Prepare for future user-uploaded datasets
+
+Current Supported Datasets
+
+* Breast Cancer
+* Iris
+* Wine
+* Digits
+
+Future Support
+
+* CSV Uploads
+* Kaggle Datasets
+* OpenML
+* Quantum Chemistry Datasets
+* User-defined datasets
+
+Output
+
+Standardized feature matrix and target labels.
+
+---
+
+## Dataset Intelligence Engine
+
+Purpose
+
+Analyze datasets before any model training begins.
+
+Responsibilities
+
+* Dataset profiling
+* Feature statistics
+* Complexity analysis
+* Correlation analysis
+* Entropy analysis
+* Class balance analysis
+* QML suitability estimation
+* Quantum Readiness Index (QRI)
 
 Output
 
 Dataset Intelligence Report
 
----
+Current Status
 
-## Experiment Tracking
-
-Purpose
-
-Maintain reproducible experiments.
-
-Responsibilities
-
-* Store Experiments
-* Retrieve Experiments
-* Version Tracking
-* Configuration Storage
-
-Output
-
-Research Database
+✅ Complete
 
 ---
 
-## Preprocessing Pipeline
+## Experiment Tracking Layer
 
 Purpose
 
-Prepare datasets for benchmarking.
+Maintain reproducible machine learning experiments.
 
 Responsibilities
 
-* Scaling
-* Feature Selection
-* PCA
-* Future Feature Engineering
+* Store experiment metadata
+* Record configurations
+* Log benchmark results
+* Restore previous experiments
+* Maintain experiment history
 
 Output
 
-Processed Dataset
+SQLite experiment database.
+
+Current Status
+
+✅ Complete
+
+---
+
+## Research Preprocessing Pipeline
+
+Purpose
+
+Prepare datasets using a standardized preprocessing workflow before benchmarking.
+
+Responsibilities
+
+* Feature scaling
+* Feature selection
+* PCA dimensionality reduction
+* Pipeline orchestration
+
+Current Features
+
+* StandardScaler
+* SelectKBest
+* Principal Component Analysis
+
+Future Features
+
+* Missing value handling
+* Automatic encoding
+* Feature engineering
+* Data augmentation
+
+Output
+
+Processed dataset shared by every benchmarked model.
+
+Current Status
+
+✅ Complete
+
+---
+
+## Unified Research Benchmark
+
+Purpose
+
+Coordinate the complete benchmarking workflow across Classical, Quantum and Hybrid Machine Learning models.
+
+Responsibilities
+
+* Execute benchmark experiments
+* Coordinate preprocessing
+* Invoke evaluation pipeline
+* Collect statistics
+* Rank models
+* Generate research summaries
+* Export benchmark reports
+
+Current Capabilities
+
+* Classical benchmarking
+* Integrated preprocessing
+* Cross-validation workflow
+* Statistical evaluation
+* Timestamped report generation
+
+Future Capabilities
+
+* Quantum benchmarking
+* Hybrid benchmarking
+* Multi-dataset benchmarking
+* Distributed execution
+
+Output
+
+Unified research benchmark leaderboard.
+
+Current Status
+
+✅ Classical Benchmark Complete
+🟡 Quantum Integration In Progress
 
 ---
 
@@ -407,45 +540,42 @@ Processed Dataset
 
 Purpose
 
-Central location for all models.
+Provide a centralized registry for all supported machine learning models.
 
-Current Models
+Current Classical Models
 
 * Logistic Regression
 * Random Forest
-* SVM
+* Support Vector Machine
 * XGBoost
-* MLP
+* Multi-Layer Perceptron (MLP)
+
+Experimental Quantum Models
+
+* Variational Quantum Classifier (VQC)
 
 Future Models
 
 * QSVM
-* VQC
 * EstimatorQNN
 * SamplerQNN
-* Hybrid QNN
-
-Output
-
-Model Objects
-
----
-
-## Benchmark Runner
-
-Purpose
-
-Execute benchmarking experiments.
+* Hybrid Quantum Neural Networks
 
 Responsibilities
 
-* Load Models
-* Execute Evaluation
-* Collect Results
+* Register available models
+* Build model instances
+* Standardize interfaces
+* Enable plug-and-play benchmarking
 
 Output
 
-Benchmark Results
+Model objects ready for evaluation.
+
+Current Status
+
+🟡 Classical Complete
+🟡 Quantum Experimental
 
 ---
 
@@ -453,17 +583,36 @@ Benchmark Results
 
 Purpose
 
-Evaluate models using multiple train/test splits.
+Evaluate models using statistically reliable validation strategies.
 
 Responsibilities
 
-* Stratified K-Fold
-* Fold Management
-* Pipeline Execution
+* Stratified K-Fold splitting
+* Fold management
+* Model cloning
+* Pipeline execution
+* Metric aggregation
+
+Current Features
+
+* Stratified Cross Validation
+* Multiple fold evaluation
+* Consistent preprocessing
+
+Future Features
+
+* Nested Cross Validation
+* Repeated K-Fold
+* Parallel execution
+* Bootstrap validation
 
 Output
 
-Fold Metrics
+Fold-wise evaluation metrics.
+
+Current Status
+
+✅ Complete
 
 ---
 
@@ -471,7 +620,7 @@ Fold Metrics
 
 Purpose
 
-Compute metrics for each fold.
+Compute performance metrics for every benchmarked model.
 
 Current Metrics
 
@@ -483,13 +632,18 @@ Current Metrics
 Future Metrics
 
 * ROC-AUC
-* MCC
+* PR-AUC
+* Matthews Correlation Coefficient
 * Balanced Accuracy
 * Cohen's Kappa
 
 Output
 
-Fold Evaluation
+Standardized performance metrics.
+
+Current Status
+
+✅ Complete
 
 ---
 
@@ -497,7 +651,7 @@ Fold Evaluation
 
 Purpose
 
-Summarize experiment statistics.
+Transform fold-level metrics into research-grade statistical summaries.
 
 Current Statistics
 
@@ -506,7 +660,7 @@ Current Statistics
 * Standard Deviation
 * Minimum
 * Maximum
-* Confidence Interval
+* 95% Confidence Interval
 
 Future Statistics
 
@@ -514,36 +668,55 @@ Future Statistics
 * Skewness
 * Kurtosis
 * Effect Size
+* Statistical Significance Tests
 
 Output
 
-Research Statistics
+Research-ready statistical summaries.
+
+Current Status
+
+✅ Complete
 
 ---
+
 
 ## Comparison Matrix
 
 Purpose
 
-Compare model performance.
+Aggregate benchmark results into a unified research leaderboard.
 
-Current Comparison
+Responsibilities
 
-* Accuracy
-* F1 Score
+* Rank evaluated models
+* Compare statistical performance
+* Separate Classical, Quantum and Hybrid models
+* Standardize benchmark output
+* Prepare data for reporting
 
-Future Comparison
+Current Features
 
-* Stability
-* Training Time
-* Inference Time
-* Resource Cost
-* Quantum Depth
-* Qubit Count
+* Model ranking
+* Accuracy comparison
+* Standard deviation reporting
+* F1 score comparison
+* Research summary generation
+
+Future Features
+
+* Multi-metric ranking
+* Interactive leaderboards
+* Stability comparison
+* Benchmark history comparison
 
 Output
 
-Research Decision Matrix
+Unified benchmark leaderboard.
+
+Current Status
+
+✅ Complete
 
 ---
 
@@ -551,18 +724,49 @@ Research Decision Matrix
 
 Purpose
 
-Generate exportable reports.
+Generate reproducible research artifacts that can be shared, archived and reused.
 
-Current
+Responsibilities
 
-* CSV
+* Export benchmark results
+* Save timestamped experiment reports
+* Maintain reproducible outputs
+* Prepare publication-ready artifacts
 
-Future
+Current Features
 
-* HTML
-* PDF
-* Publication Format
-* Interactive Dashboard
+* Timestamped CSV export
+* Automatic dataset-based filenames
+* Research summary generation
+
+Example Output
+
+```text
+reports/
+
+breast_cancer_20260707_001221.csv
+
+iris_20260707_183512.csv
+
+wine_20260708_101845.csv
+```
+
+Future Features
+
+* PDF report generation
+* HTML reports
+* Markdown reports
+* Publication-ready reports
+* Interactive dashboards
+
+Output
+
+Research reports stored under the reports directory.
+
+Current Status
+
+✅ CSV Reporting Complete
+🟡 PDF Generation Planned
 
 ---
 
@@ -570,187 +774,234 @@ Future
 
 Purpose
 
-Serve as an intelligent assistant for QIL.
+Provide an intelligent assistant capable of understanding datasets, benchmarks and Quantum Machine Learning experiments.
 
-Capabilities
+Responsibilities
 
 * Explain benchmark results
-* Explain preprocessing decisions
-* Interpret statistical analyses
+* Compare machine learning models
 * Recommend preprocessing strategies
-* Compare Classical, Quantum and Hybrid models
-* Answer Quantum Machine Learning questions
-* Query historical experiments
-* Summarize experiment outcomes
-* Generate research insights
-* Assist in scientific interpretation
+* Suggest Quantum ML algorithms
+* Summarize experiments
+* Guide research decisions
 
-The AI Research Copilot operates on top of QIL's own
-experiment database and research pipeline.
+Planned Technologies
 
-Rather than acting as a generic conversational assistant,
-its primary role is to help researchers interpret,
-compare and reason about experimental evidence generated
-inside the platform.
+* Retrieval-Augmented Generation (RAG)
+* Local Large Language Models
+* Tool Calling
+* Research Memory
+* Experiment Search
+
+Expected Outputs
+
+* Natural language explanations
+* Research guidance
+* Interactive conversations
+* Automated experiment planning
+
+Current Status
+
+⬜ Planned
 
 ---
 
 # Dependency Hierarchy
 
-The project follows a layered architecture.
+The QIL architecture follows a layered dependency model.
 
-```
-User
+Higher layers coordinate workflow while lower layers perform specialized tasks.
 
-↓
-
+```text
 Application Layer
-
-↓
-
-Dataset Layer
-
-↓
-
-Preprocessing Layer
-
-↓
-
-Model Layer
-
-↓
-
-Evaluation Layer
-
-↓
-
-Reporting Layer
-
-↓
-
-AI Layer
+        │
+        ▼
+AI Research Copilot
+        │
+        ▼
+Reporting
+        │
+        ▼
+Benchmarking
+        │
+        ▼
+Evaluation
+        │
+        ▼
+Model Registries
+        │
+        ▼
+Preprocessing
+        │
+        ▼
+Dataset Intelligence
+        │
+        ▼
+Configuration
+        │
+        ▼
+Utilities
 ```
 
-Higher layers depend on lower layers.
-
-Lower layers should never depend on higher layers.
-
-Example:
-
-Reporting may use Evaluation.
-
-Evaluation should never use Reporting.
+This hierarchy minimizes coupling between components and allows each subsystem to evolve independently.
 
 ---
 
 # Extension Points
 
-The architecture has predefined extension points for future development.
+One of the primary goals of QIL is long-term extensibility.
 
-Planned additions include:
+The following extension points are intentionally designed into the architecture.
 
-Evaluation
+## Dataset Extensions
 
-* Hyperparameter Optimization
-* Stability Analysis
+Future datasets can be introduced by implementing additional dataset loaders without modifying the benchmarking pipeline.
 
-Models
+Examples include:
 
-* QSVM
-* VQC
-* EstimatorQNN
-* SamplerQNN
-* Hybrid Models
-
-Explainability
-
-* Feature Importance
-* Permutation Importance
-* SHAP
-
-Research
-
-* Recommendation Engine
-* Publication Generator
-* Research Memory
-
-Artificial Intelligence
-
-* AI Research Copilot
-* Natural Language Query Engine
-* Research Assistant
+* CSV datasets
+* OpenML datasets
+* Kaggle datasets
+* Domain-specific scientific datasets
+* User-uploaded datasets
 
 ---
 
-# Non-Functional Requirements
+## Model Extensions
 
-The platform is designed to satisfy the following quality attributes.
+New learning algorithms can be registered without modifying the benchmark engine.
 
-Maintainability
+Examples include:
 
-Every module should be understandable in isolation.
-
-Scalability
-
-New models should integrate with minimal changes.
-
-Reproducibility
-
-Experiments should be repeatable.
-
-Readability
-
-Code should remain beginner-friendly while following professional engineering practices.
-
-Testability
-
-Every major module should have dedicated unit tests.
+* Classical models
+* Quantum models
+* Hybrid models
+* Ensemble methods
 
 ---
 
-# Current Status
+## Evaluation Extensions
 
-Current Version
+Additional evaluation strategies can be integrated through the Evaluation layer.
 
-0.5.0
+Examples
 
-Current Sprint
+* Nested Cross Validation
+* Bootstrap Evaluation
+* Monte Carlo Validation
+* Repeated K-Fold
 
-Sprint 5
+---
 
-Current Focus
+## Reporting Extensions
 
-Research Evaluation Platform
+Additional output formats can reuse the benchmark results.
 
-Completed Core Systems
+Examples
 
-* Dataset Intelligence
-* Experiment Tracking
-* Reproducibility Engine
-* Research Preprocessing Pipeline
-* Classical Model Registry
-* Classical Benchmark Engine
-* Cross Validation Engine
-* Statistical Analysis Engine
-* Research Comparison Matrix
-* CSV Reporting
+* PDF reports
+* HTML dashboards
+* LaTeX tables
+* Interactive visualizations
+* Publication-ready documents
 
-Next Major Milestones
+---
 
-* Core Domain Layer
-* Benchmark Integration Refactor
-* Hyperparameter Optimization
-* Explainability Engine
-* Quantum Model Registry
-* Hybrid Benchmarking
-* AI Research Copilot
+## AI Extensions
+
+The AI Research Copilot will eventually interact with every major subsystem.
+
+Future capabilities include:
+
+* Experiment planning
+* Benchmark interpretation
+* Dataset recommendation
+* Model selection guidance
+* Scientific writing assistance
+
+---
+
+# Current Architecture Status
+
+Overall Completion
+
+```text
+█████████████████████████□□□□□□□□□□□□□□□ 60%
+```
+
+Completed Architecture Layers
+
+✅ Configuration Management
+
+✅ Dataset Loading
+
+✅ Dataset Intelligence
+
+✅ Experiment Tracking
+
+✅ Research Preprocessing
+
+✅ Classical Model Registry
+
+✅ Unified Research Benchmark
+
+✅ Cross Validation Engine
+
+✅ Metrics Calculator
+
+✅ Statistical Analyzer
+
+✅ Comparison Matrix
+
+✅ Timestamped CSV Reporting
+
+In Progress
+
+🟡 Quantum Machine Learning Integration
+
+🟡 Advanced Reporting
+
+Planned
+
+⬜ Hyperparameter Optimization
+
+⬜ Explainability Layer
+
+⬜ Hybrid Machine Learning
+
+⬜ Quantum Resource Analysis
+
+⬜ Recommendation Engine
+
+⬜ Publication Generator
+
+⬜ AI Research Copilot
+
+⬜ Interactive Web Platform
 
 ---
 
 # Architectural Vision
 
-The final version of QIL should resemble a professional research platform capable of evaluating, comparing, explaining and recommending Classical, Quantum and Hybrid Machine Learning solutions using a unified software architecture.
+The architecture of Quantum Intelligence Lab is intentionally designed to evolve through successive engineering iterations rather than isolated feature additions.
+
+Version 1.0 establishes a stable research foundation with standardized preprocessing, reproducible experimentation, unified benchmarking and statistically rigorous evaluation.
+
+Future versions will build upon this foundation by introducing native Quantum Machine Learning support, Hybrid Quantum-Classical workflows, explainability, hyperparameter optimization, publication-ready reporting and AI-assisted research guidance.
+
+By preserving modular boundaries and stable interfaces, QIL can continue expanding without requiring major architectural redesigns, ensuring that every new capability integrates naturally into the existing ecosystem.
+
+---
+
+# Summary
+
+Quantum Intelligence Lab is organized as a layered, modular and research-oriented software platform.
+
+Each architectural layer performs a clearly defined responsibility while remaining loosely coupled to the rest of the system. This design enables reproducibility, maintainability and straightforward extensibility across Classical Machine Learning, Quantum Machine Learning and Hybrid Quantum-Classical workflows.
+
+Rather than serving as a collection of isolated demonstrations, QIL is engineered to become a comprehensive research platform capable of supporting benchmarking, experimentation, explainability, publication generation and intelligent research assistance within a unified architecture.
 
 ---
 
 **End of Document**
+

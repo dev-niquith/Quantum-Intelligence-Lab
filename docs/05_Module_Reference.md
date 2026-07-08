@@ -2,30 +2,78 @@
 
 **Project:** Quantum Intelligence Lab (QIL)
 
-**Version:** 0.5.0 (Development)
+**Version:** v1.0.0 (Stable Release)
 
 ---
 
 # Purpose
 
-This document provides a detailed reference for every major module within Quantum Intelligence Lab.
+This document provides a comprehensive reference for every major module within Quantum Intelligence Lab (QIL).
 
-Unlike the Folder Reference, which describes the project structure, this document focuses on the software architecture and responsibilities of each module.
+Unlike the Folder Reference, which describes the repository structure, this document focuses on the software architecture, responsibilities and interactions of each module.
 
-For every module, the following information is provided:
+For every module, the following information is documented:
 
 * Purpose
 * Responsibilities
 * Inputs
 * Outputs
+* Public Components
 * Dependencies
-* Public Interfaces
 * Current Status
-* Planned Enhancements
+* Future Evolution
 
 ---
 
-# 1. Dataset Intelligence Module
+# 1. Configuration Module
+
+Location
+
+```text
+src/config/
+```
+
+Purpose
+
+Provide centralized configuration management for the entire platform.
+
+Responsibilities
+
+* Load YAML configuration
+* Provide nested configuration access
+* Maintain runtime configuration
+* Support future configuration expansion
+
+Inputs
+
+* config.yaml
+
+Outputs
+
+* Runtime configuration object
+
+Public Components
+
+* ConfigManager
+
+Dependencies
+
+* PyYAML
+
+Status
+
+✅ Stable
+
+Future Enhancements
+
+* Environment profiles
+* Runtime overrides
+* Configuration validation
+* CLI integration
+
+---
+
+# 2. Dataset Intelligence Module
 
 Location
 
@@ -35,30 +83,29 @@ src/datasets/
 
 Purpose
 
-Analyze datasets before model training.
+Provide standardized dataset loading and dataset analysis before benchmarking.
 
 Responsibilities
 
-* Load datasets
+* Load benchmark datasets
 * Profile datasets
 * Analyze complexity
 * Compute entropy
-* Analyze feature correlation
-* Evaluate class balance
-* Estimate Quantum ML suitability
+* Evaluate feature correlations
+* Analyze class balance
 * Calculate Quantum Readiness Index (QRI)
+* Estimate Quantum ML suitability
 
 Inputs
 
 * Dataset name
-* Raw feature matrix
-* Target labels
+* Raw dataset
 
 Outputs
 
 * Dataset Intelligence Report
-* QML Suitability Score
-* Quantum Readiness Index
+* QRI Score
+* Dataset metadata
 
 Public Components
 
@@ -68,30 +115,71 @@ Public Components
 * CorrelationAnalyzer
 * EntropyAnalyzer
 * ClassBalanceAnalyzer
-* QMLSuitability
+* QMLSuitabilityAnalyzer
 * QRICalculator
 * IntelligenceEngine
 
 Dependencies
 
-* NumPy
 * pandas
+* NumPy
 * scikit-learn
 
 Status
 
-✅ Complete
+✅ Stable
 
 Future Enhancements
 
-* Automatic dataset download
+* CSV uploads
+* Automatic dataset downloads
 * Dataset caching
-* Multi-label dataset support
-* Time-series dataset analysis
+* Time-series datasets
+* Multi-label support
 
 ---
 
-# 2. Experiment Tracking Module
+# 3. Core Module
+
+Location
+
+```text
+src/core/
+```
+
+Purpose
+
+Provide common abstractions shared across all machine learning models.
+
+Responsibilities
+
+* Define common interfaces
+* Standardize model implementations
+* Reduce duplicate code
+* Enable interchangeable benchmarking
+
+Public Components
+
+* BaseModel
+
+Dependencies
+
+* scikit-learn
+
+Status
+
+✅ Stable
+
+Future Enhancements
+
+* BaseQuantumModel
+* BaseHybridModel
+* Shared serialization
+* Common validation utilities
+
+---
+
+# 4. Experiment Tracking Module
 
 Location
 
@@ -105,21 +193,21 @@ Maintain reproducible research experiments.
 
 Responsibilities
 
-* Store experiments
-* Retrieve experiments
-* Restore configurations
+* Store experiment metadata
+* Retrieve previous experiments
+* Reproduce benchmark configurations
 * Maintain experiment history
 
 Inputs
 
-* Experiment metadata
 * Configuration
 * Metrics
+* Experiment metadata
 
 Outputs
 
 * SQLite database
-* Experiment records
+* Experiment history
 
 Public Components
 
@@ -135,17 +223,17 @@ Dependencies
 
 Status
 
-✅ Complete
+✅ Stable
 
 Future Enhancements
 
 * Experiment comparison
-* Versioned experiment snapshots
-* Cloud storage support
+* Version snapshots
+* Cloud synchronization
 
 ---
 
-# 3. Research Preprocessing Module
+# 5. Research Preprocessing Module
 
 Location
 
@@ -155,14 +243,14 @@ src/preprocessing/
 
 Purpose
 
-Prepare datasets for model evaluation.
+Prepare datasets using a unified preprocessing pipeline before benchmarking.
 
 Responsibilities
 
-* Scaling
+* Feature scaling
 * Feature selection
-* PCA reduction
-* Pipeline execution
+* PCA dimensionality reduction
+* Pipeline orchestration
 
 Inputs
 
@@ -185,18 +273,18 @@ Dependencies
 
 Status
 
-✅ Complete
+✅ Stable
 
 Future Enhancements
 
 * Missing value handling
-* Feature engineering
+* Automatic feature engineering
 * Encoding strategies
-* Automatic preprocessing recommendations
+* Preprocessing recommendations
 
 ---
 
-# 4. Classical Model Module
+# 6. Classical Model Module
 
 Location
 
@@ -206,21 +294,22 @@ src/models/classical/
 
 Purpose
 
-Provide implementations of classical machine learning models.
+Provide standardized implementations of classical machine learning algorithms compatible with the unified benchmarking framework.
 
 Responsibilities
 
-* Build models
+* Construct classical models
 * Standardize model interfaces
-* Register available algorithms
+* Register algorithms
+* Enable reproducible benchmarking
 
 Current Models
 
 * Logistic Regression
 * Random Forest
-* Support Vector Machine
+* Support Vector Machine (SVM)
 * XGBoost
-* Multi-Layer Perceptron
+* Multi-Layer Perceptron (MLP)
 
 Public Components
 
@@ -238,18 +327,76 @@ Dependencies
 
 Status
 
-✅ Complete
+✅ Stable
 
 Future Enhancements
 
 * LightGBM
 * CatBoost
-* Extra Trees
 * AdaBoost
+* Extra Trees
+* TabNet
+* AutoML integration
 
 ---
 
-# 5. Evaluation Module
+# 7. Quantum Model Module
+
+Location
+
+```text
+src/models/quantum/
+```
+
+Purpose
+
+Provide native Quantum Machine Learning models compatible with the same benchmarking infrastructure used for Classical ML.
+
+Responsibilities
+
+* Construct quantum models
+* Standardize quantum interfaces
+* Support fair Classical vs Quantum comparisons
+
+Current Models
+
+* Variational Quantum Classifier (VQC)
+
+Planned Models
+
+* Quantum Support Vector Machine (QSVM)
+* EstimatorQNN
+* SamplerQNN
+* Quantum Kernel Classifier
+
+Public Components
+
+* QuantumModelRegistry
+* VQCModel
+
+Dependencies
+
+* Qiskit
+* Qiskit Machine Learning
+
+Status
+
+🟡 Experimental
+
+Notes
+
+The VQC implementation has been successfully integrated and tested independently. Full cross-validation compatibility and unified benchmarking support will be completed in Version 2.0.
+
+Future Enhancements
+
+* Noise-aware simulations
+* Real hardware execution
+* Quantum kernel optimization
+* Dynamic circuit generation
+
+---
+
+# 8. Evaluation Module
 
 Location
 
@@ -259,14 +406,15 @@ src/evaluation/
 
 Purpose
 
-Evaluate model performance using research-grade methodology.
+Provide statistically rigorous evaluation for all benchmarked models.
 
 Responsibilities
 
-* Train/test splitting
 * Cross validation
 * Metric computation
 * Statistical analysis
+* Confidence interval estimation
+* Reproducible evaluation
 
 Inputs
 
@@ -277,10 +425,10 @@ Outputs
 
 * Fold metrics
 * Statistical summaries
+* Confidence intervals
 
 Public Components
 
-* TrainTestManager
 * MetricsCalculator
 * CrossValidator
 * StatisticalAnalyzer
@@ -289,21 +437,23 @@ Dependencies
 
 * scikit-learn
 * NumPy
+* pandas
 
 Status
 
-🟡 Active Development
+✅ Stable
 
 Future Enhancements
 
-* Nested cross-validation
-* Bootstrap evaluation
+* Nested Cross Validation
+* Bootstrap Sampling
 * Repeated K-Fold
-* Parallel execution
+* Parallel Evaluation
+* Statistical Significance Testing
 
 ---
 
-# 6. Benchmarking Module
+# 9. Benchmarking Module
 
 Location
 
@@ -313,51 +463,53 @@ src/benchmarking/
 
 Purpose
 
-Coordinate model benchmarking.
+Coordinate the complete benchmarking workflow across Classical, Quantum and future Hybrid Machine Learning models.
 
 Responsibilities
 
 * Execute registered models
-* Collect evaluation metrics
-* Rank models
-* Generate benchmark summaries
+* Invoke preprocessing pipeline
+* Coordinate cross validation
+* Aggregate evaluation metrics
+* Produce unified leaderboards
+* Generate research summaries
 
 Inputs
 
-* Model registry
-* Processed dataset
+* Model Registries
+* Processed Dataset
+* Benchmark Configuration
 
 Outputs
 
-* Ranked benchmark results
+* Unified Research Leaderboard
+* Statistical Benchmark Results
 
 Public Components
 
-* ClassicalBenchmark
-
-Future Components
-
-* QuantumBenchmark
-* HybridBenchmark
+* ResearchBenchmark
 
 Dependencies
 
 * Evaluation Module
-* Model Registry
+* Reporting Module
+* Model Registries
+* Configuration Module
 
 Status
 
-🟡 Active Development
+✅ Stable
 
 Future Enhancements
 
-* Parallel benchmarking
-* Benchmark caching
-* Automatic benchmark scheduling
+* Parallel Benchmark Execution
+* Distributed Benchmarking
+* Benchmark Caching
+* Automatic Benchmark Scheduling
 
 ---
 
-# 7. Reporting Module
+# 10. Reporting Module
 
 Location
 
@@ -367,61 +519,38 @@ src/reporting/
 
 Purpose
 
-Generate research outputs.
+Generate research-ready benchmark outputs.
 
 Responsibilities
 
-* Comparison matrices
-* Benchmark reports
-* Publication-ready summaries
+* Produce comparison matrices
+* Generate benchmark summaries
+* Export benchmark results
+* Maintain timestamped experiment reports
 
 Inputs
 
-* Evaluation results
+* Benchmark Results
 
 Outputs
 
-* CSV
-* PDF (planned)
-* HTML (planned)
+* CSV Reports
+* Research Summaries
 
-Public Components
+Current Components
 
 * ComparisonMatrix
 
-Status
+Current Export Formats
 
-🟡 Active Development
+* CSV
 
-Future Enhancements
+Planned Export Formats
 
-* Publication generator
-* Interactive dashboards
-* LaTeX export
-
----
-
-# 8. Configuration Module
-
-Location
-
-```text
-src/config/
-```
-
-Purpose
-
-Centralize project configuration.
-
-Responsibilities
-
-* Load configuration
-* Validate settings
-* Expose runtime configuration
-
-Public Components
-
-* ConfigManager
+* PDF
+* HTML
+* Markdown
+* Excel
 
 Status
 
@@ -429,13 +558,14 @@ Status
 
 Future Enhancements
 
-* Schema validation
-* Environment profiles
-* Runtime overrides
+* Publication Generator
+* IEEE Report Templates
+* Interactive Dashboards
+* LaTeX Export
 
 ---
 
-# 9. Utility Module
+# 11. Utility Module
 
 Location
 
@@ -445,7 +575,7 @@ src/utils/
 
 Purpose
 
-Provide reusable utilities shared across the project.
+Provide reusable helper utilities shared across the entire platform.
 
 Current Components
 
@@ -454,6 +584,7 @@ Current Components
 Responsibilities
 
 * Random seed management
+* Reproducibility support
 * Shared helper functionality
 
 Status
@@ -462,14 +593,15 @@ Status
 
 Future Enhancements
 
-* Logging utilities
-* Timing utilities
-* File utilities
-* Serialization helpers
+* Logging Utilities
+* Timing Utilities
+* File Utilities
+* Serialization Helpers
+* Performance Profiling Utilities
 
 ---
 
-# 10. Optimization Module
+# 12. Optimization Module
 
 Location
 
@@ -479,18 +611,28 @@ src/optimization/
 
 Purpose
 
-Automatically optimize model hyperparameters.
+Automatically discover optimal hyperparameter configurations for both Classical and Quantum Machine Learning models.
+
+Responsibilities
+
+* Hyperparameter tuning
+* Automated model selection
+* Optimization tracking
+* Performance comparison
 
 Planned Components
 
 * Grid Search
 * Random Search
 * Bayesian Optimization
+* Optuna Integration
+* Hyperparameter Recommendation Engine
 
 Expected Outputs
 
 * Best parameter configuration
-* Optimization reports
+* Optimization history
+* Performance reports
 
 Status
 
@@ -498,7 +640,7 @@ Status
 
 ---
 
-# 11. Explainability Module
+# 13. Explainability Module
 
 Location
 
@@ -508,19 +650,27 @@ src/explainability/
 
 Purpose
 
-Interpret and explain model predictions.
+Interpret model predictions and improve transparency of benchmark results.
+
+Responsibilities
+
+* Explain predictions
+* Rank feature importance
+* Visualize decision behaviour
+* Compare feature contributions across models
 
 Planned Components
 
 * Feature Importance
 * Permutation Importance
 * SHAP Integration
+* LIME Integration
 
 Expected Outputs
 
-* Feature rankings
 * Explanation reports
-* Visualizations
+* Feature rankings
+* Interactive visualizations
 
 Status
 
@@ -528,7 +678,7 @@ Status
 
 ---
 
-# 12. Recommendation Module
+# 14. Recommendation Module
 
 Location
 
@@ -538,49 +688,20 @@ src/recommendations/
 
 Purpose
 
-Provide intelligent research recommendations.
+Provide intelligent recommendations based on benchmark results, dataset characteristics and evaluation metrics.
 
-Planned Capabilities
+Responsibilities
 
-* Model recommendations
-* Preprocessing suggestions
-* Dataset suitability analysis
-* Optimization guidance
+* Recommend suitable models
+* Recommend preprocessing strategies
+* Estimate Quantum ML suitability
+* Suggest optimization strategies
 
 Expected Outputs
 
 * Research recommendations
 * Decision support
-
-Status
-
-⬜ Planned
-
----
-
-# 13. Quantum Model Module
-
-Location
-
-```text
-src/models/quantum/
-```
-
-Purpose
-
-Implement native Quantum Machine Learning models.
-
-Planned Models
-
-* QSVM
-* Variational Quantum Classifier (VQC)
-* EstimatorQNN
-* SamplerQNN
-
-Dependencies
-
-* Qiskit
-* Qiskit Machine Learning
+* Model selection guidance
 
 Status
 
@@ -588,13 +709,14 @@ Status
 
 Future Enhancements
 
-* Quantum kernel optimization
-* Hardware execution
-* Noise-aware benchmarking
+* Dataset-specific recommendations
+* Explainability-aware recommendations
+* Cost-performance optimization
+* Hardware-aware recommendations
 
 ---
 
-# 14. Hybrid Model Module
+# 15. Hybrid Model Module
 
 Location
 
@@ -604,13 +726,21 @@ src/models/hybrid/
 
 Purpose
 
-Combine classical and quantum learning techniques.
+Combine Classical and Quantum Machine Learning into unified hybrid learning pipelines.
 
 Planned Models
 
 * Hybrid Quantum Neural Networks
-* Quantum feature extraction pipelines
-* Ensemble architectures
+* Quantum Feature Extraction Pipelines
+* Classical-Quantum Ensembles
+* Transfer Learning Architectures
+
+Dependencies
+
+* PyTorch
+* PennyLane
+* Qiskit
+* scikit-learn
 
 Status
 
@@ -619,13 +749,15 @@ Status
 Future Enhancements
 
 * Adaptive hybrid pipelines
-* Multi-stage training workflows
+* Multi-stage optimization
+* Hardware-aware execution
+* Hybrid AutoML
 
 ---
 
-# 15. AI Research Copilot Module
+# 16. AI Research Copilot Module
 
-**Planned Location**
+Planned Location
 
 ```text
 src/copilot/
@@ -633,31 +765,68 @@ src/copilot/
 
 Purpose
 
-Serve as the intelligent interface for Quantum Intelligence Lab.
+Serve as the intelligent research assistant embedded within Quantum Intelligence Lab.
 
 Responsibilities
 
-* Answer QML questions
 * Explain benchmark results
-* Recommend models
-* Suggest preprocessing strategies
-* Summarize experiments
-* Interpret statistical findings
-* Assist with research decisions
+* Compare Classical, Quantum and Hybrid models
+* Answer Quantum Machine Learning questions
+* Recommend preprocessing strategies
+* Interpret statistical metrics
+* Summarize completed experiments
+* Guide research decisions
 
 Planned Technologies
 
 * Retrieval-Augmented Generation (RAG)
-* Local LLM support
-* Vector database
-* Tool calling
-* Research memory
+* Local LLM Support
+* Vector Database
+* Tool Calling
+* Research Memory
+* Multi-Agent Workflows
 
 Expected Outputs
 
 * Natural language explanations
 * Research guidance
 * Interactive conversations
+* Experiment recommendations
+
+Status
+
+⬜ Planned
+
+---
+
+# 17. Application Module
+
+Planned Location
+
+```text
+src/app/
+```
+
+Purpose
+
+Provide an interactive interface for researchers, students and engineers to use QIL without writing code.
+
+Planned Features
+
+* Dataset Upload
+* Configuration Editor
+* Benchmark Execution
+* Experiment History
+* Interactive Visualizations
+* Explainability Dashboard
+* AI Chat Interface
+* Report Downloads
+
+Potential Technologies
+
+* Streamlit
+* FastAPI
+* React (Future)
 
 Status
 
@@ -668,40 +837,82 @@ Status
 # Module Dependency Overview
 
 ```text
-Application Layer
-        │
-        ▼
-AI Research Copilot
-        │
-        ▼
-Reporting
-        │
-        ▼
-Benchmarking
-        │
-        ▼
-Evaluation
-        │
-        ▼
-Models
-        │
-        ▼
-Preprocessing
-        │
-        ▼
-Dataset Intelligence
-        │
-        ▼
-Configuration / Utilities
+                        Application Layer
+                               │
+                               ▼
+                    AI Research Copilot
+                               │
+                               ▼
+                      Recommendation Engine
+                               │
+                               ▼
+                           Reporting
+                               │
+                               ▼
+                    Research Benchmark Engine
+                               │
+                               ▼
+                        Evaluation Layer
+                               │
+                               ▼
+        Classical │ Quantum │ Hybrid Model Registries
+                               │
+                               ▼
+                 Research Preprocessing Pipeline
+                               │
+                               ▼
+                    Dataset Intelligence Engine
+                               │
+                               ▼
+          Configuration • Database • Utilities • Core
 ```
 
-Each module communicates through stable interfaces, ensuring that future extensions can be integrated without major architectural changes.
+Every module communicates through stable interfaces rather than direct implementation dependencies. This architecture enables new models, evaluation techniques and reporting capabilities to be integrated with minimal changes to the surrounding system.
+
+---
+
+# Current Module Status Summary
+
+| Module | Status |
+|---------|--------|
+| Configuration | ✅ Stable |
+| Dataset Intelligence | ✅ Stable |
+| Core | ✅ Stable |
+| Experiment Tracking | ✅ Stable |
+| Research Preprocessing | ✅ Stable |
+| Classical Models | ✅ Stable |
+| Quantum Models | 🟡 Experimental |
+| Evaluation | ✅ Stable |
+| Benchmarking | ✅ Stable |
+| Reporting | ✅ Stable |
+| Utilities | 🟡 Growing |
+| Optimization | ⬜ Planned |
+| Explainability | ⬜ Planned |
+| Recommendations | ⬜ Planned |
+| Hybrid Models | ⬜ Planned |
+| AI Research Copilot | ⬜ Planned |
+| Application | ⬜ Planned |
 
 ---
 
 # Summary
 
-QIL is composed of independent yet interconnected modules that collectively form a research-grade Quantum Machine Learning platform. Every module has a clearly defined responsibility, standardized interfaces, and an evolution path toward Version 1.0. This modular architecture enables maintainability, extensibility, reproducibility, and seamless integration of future Classical, Quantum, Hybrid, Explainability, Optimization, and AI-assisted research capabilities.
+Quantum Intelligence Lab (QIL) is organized as a collection of modular, loosely coupled components that together form a research-grade Machine Learning and Quantum Machine Learning platform.
+
+As of **Version 1.0.0**, the project provides:
+
+* A unified configuration system
+* Dataset intelligence and preprocessing
+* Experiment tracking and reproducibility
+* Research-grade statistical evaluation
+* A unified benchmarking engine
+* Timestamped research report generation
+* Standardized Classical ML benchmarking
+* Initial Quantum ML integration through an experimental Variational Quantum Classifier (VQC)
+
+Future versions will extend this foundation with optimization, explainability, Hybrid Quantum-Classical learning, AI-assisted research workflows and a complete interactive application.
+
+The modular architecture ensures that each subsystem can evolve independently while maintaining compatibility with the overall platform, making QIL suitable for research, education and production-oriented Quantum Machine Learning experimentation.
 
 ---
 
